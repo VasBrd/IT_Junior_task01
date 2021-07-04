@@ -28,7 +28,7 @@ RUN wget https://github.com/samtools/htslib/releases/download/1.12/htslib-1.12.t
     make install && \
     cd .. && rm -r ${appver}
     
-ENV export PATH=${SOFT}/htslib-1.12/bin:$PATH
+ENV PATH=${SOFT}/htslib-1.12/bin:$PATH
 
 # samtools 1.12 released 17 Mar 2021
 RUN wget https://github.com/samtools/samtools/releases/download/1.12/samtools-1.12.tar.bz2 && \
@@ -41,6 +41,7 @@ RUN wget https://github.com/samtools/samtools/releases/download/1.12/samtools-1.
 	make install && \
 	cd .. && rm -r ${appver}
 	
-ENV export PATH=${SOFT}/samtools-1.12/bin:$PATH
+ENV PATH=${SOFT}/samtools-1.12/bin:$PATH
 
+#RUN rm -r TEMP_installs
 CMD ["bash"]
