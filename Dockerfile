@@ -20,8 +20,8 @@ RUN apt-get update && apt-get install -y \
 # HTSlib 1.12 released 17 Mar 2021
 RUN wget https://github.com/samtools/htslib/releases/download/1.12/htslib-1.12.tar.bz2 && \
 	appver='htslib-1.12' && \
-	tar -xjf ${appver}.tar.bz2 && \
-	rm ${appver}.tar.bz2 && \
+	tar -xjf *.tar.bz2 && \
+	rm *.tar.bz2 && \
     cd ${appver} && \
     ./configure --prefix=${SOFT}/${appver} && \
     make && \
@@ -33,8 +33,8 @@ ENV PATH=${SOFT}/htslib-1.12/bin:$PATH
 # samtools 1.12 released 17 Mar 2021
 RUN wget https://github.com/samtools/samtools/releases/download/1.12/samtools-1.12.tar.bz2 && \
 	appver='samtools-1.12' && \
-	tar -xjf ${appver}.tar.bz2 && \
-	rm ${appver}.tar.bz2 && \
+	tar -xjf *.tar.bz2 && \
+	rm *.tar.bz2 && \
 	cd ${appver} && \
 	./configure --prefix=${SOFT}/${appver} --with-htslib=${SOFT}/htslib-1.12 && \
 	make && \
@@ -42,6 +42,20 @@ RUN wget https://github.com/samtools/samtools/releases/download/1.12/samtools-1.
 	cd .. && rm -r ${appver}
 	
 ENV PATH=${SOFT}/samtools-1.12/bin:$PATH
+
+# libdeflate released 10 Nov 2020
+RUN wget https://github.com/ebiggers/libdeflate/archive/refs/tags/v1.7.tar.gz && \
+	appver='libdeflate-1.7' && \
+	tar -xzf *.tar.gz && \
+	rm *.tar.gz && \
+	cd ${appver} && \
+	#mkdir ${SOFT}/${appver} && \
+	make && \
+	make install PREFIX=${SOFT}/${appver} && \
+	cd .. && rm -r ${appver}
+	
+ENV PATH=${SOFT}/libdeflate-1.7/bin:$PATH
+
 
 #RUN rm -r TEMP_installs
 CMD ["bash"]
