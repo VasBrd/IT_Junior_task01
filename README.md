@@ -1,6 +1,6 @@
 # IT_Junior_task01
 
-This Docker image was created as a test task by Vasily Borodin. 
+This Docker image was created as a test task by Vasily Borodin.
 
 ### Programs
 
@@ -13,10 +13,14 @@ The image contains the following programs:
 ### Commands
 
 Building:
-`docker build -t ITJtask`
-
+```
+docker build -t ITJtask .
+```
 Running interactively:
-`docker run -it ITJtask`
-
+```
+docker run -it ITJtask
+```
 Running interactively from root user:
-`docker run -u 0 -it ITJtask`
+```
+docker run -u 0 -it ITJtask
+```
