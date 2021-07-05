@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
 	libbz2-dev \
 	liblzma-dev \
 	libcurl4-gnutls-dev \
-	pkg-config
+	pkg-config \
+	sudo
 
 
 
@@ -29,9 +30,9 @@ RUN wget https://github.com/ebiggers/libdeflate/archive/refs/tags/v1.7.tar.gz &&
 	make install PREFIX=${SOFT}/${appver} && \
 	cd .. && rm -r ${appver}
 	
-ENV PATH=${SOFT}/libdeflate-1.7/bin:$PATH
-#ENV LIBDEFLATEGUNZIP=${SOFT}/libdeflate-1.7/bin/libdeflate-gunzip
-#	LIBDEFLATEGZIP=${SOFT}/libdeflate-1.7/bin/libdeflate-gzip
+ENV PATH=${SOFT}/libdeflate-1.7/bin:$PATH 
+ENV LIBDEFLATEGUNZIP=${SOFT}/libdeflate-1.7/bin/libdeflate-gunzip \
+	LIBDEFLATEGZIP=${SOFT}/libdeflate-1.7/bin/libdeflate-gzip
 
 
 
@@ -90,12 +91,14 @@ ENV SAMTOOLS=${SOFT}/samtools-1.12/bin/samtools \
 
 
 # gcc-9 and g++-9
-# updating compiler since the one form ubuntu:18.04 is outdated for the build of current release of libmaus2 -  
+# updating compiler since the one included in ubuntu:18.04 is outdated for the build of current release of libmaus2
 RUN apt install -y software-properties-common && \
 	add-apt-repository ppa:ubuntu-toolchain-r/test && \
 	apt update && \
 	apt install -y gcc-9 g++-9 && \
 	update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9
+
+
 
 # libmaus2 released 26 Jun 2021
 RUN wget https://gitlab.com/german.tischler/libmaus2/-/archive/2.0.791-release-20210626211042/libmaus2-2.0.791-release-20210626211042.tar.bz2 && \
@@ -103,13 +106,12 @@ RUN wget https://gitlab.com/german.tischler/libmaus2/-/archive/2.0.791-release-2
 	tar -xjf *.tar.bz2 && \
 	rm *.tar.bz2 && \
     cd ${appver} && \
-    ./configure --prefix=${SOFT}/${appver%-release*} && \
+    ./configure --prefix=${SOFT}/${appver%-release*}  && \
     make && \
+    cd . && \
     make install && \
 	cd .. && rm -r ${appver}
 	
-#--with-libdeflate ?
-
 ENV PATH=${SOFT}/libmaus2-2.0.791/bin:$PATH
 
 
@@ -128,7 +130,9 @@ RUN wget https://gitlab.com/german.tischler/biobambam2/-/archive/2.0.182-release
 
 ENV PATH=${SOFT}/biobambam2-2.0.182/bin:$PATH
 
+RUN adduser --shell /bin/bash --disabled-password --gecos '' theuser
+WORKDIR /home/theuser
+RUN rm -rf /TEMP_installs 
+USER    theuser
 
-# sudo? user?
-#RUN rm -r TEMP_installs
 CMD ["bash"]
